@@ -1,0 +1,71 @@
+openapi: 3.0.3
+info:
+  version: '1.0.0'
+  title: 'Note Keep API'
+servers:
+  - url: 'localhost:3000'
+paths:
+  /notes:
+    get:
+      summary: 'Returns details about a particular note'
+      operationId: listNotes
+      tags:
+        - note
+      parameters:
+        - name: id
+          in: query
+          description: ID of the note
+          required: false
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: 'Sample response: Details about a note by ID'
+          headers:
+            x-next:
+              description: A link to the next page of responses
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Note'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    Note:
+      type: object
+      required:
+        - id
+        - title
+      properties:
+        id:
+          type: integer
+          format: int64
+        title:
+          type: string
+        tag:
+          type: string
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+security:
+  - BasicAuth: []
